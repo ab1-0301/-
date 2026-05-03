@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ site.name }} - 库存{% endblock %}
+{% block content %}
+<a href="{{ url_for('index') }}" class="back-link">← 返回项目地总览</a>
+
+<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:20px">
+    <div>
+        <div class="page-title">📍 {{ site.name }}</div>
+        {% if site.location %}<span class="tag">{{ site.location }}</span>{% endif %}
+        {% if site.contact %}<span class="tag">📞 {{ site.contact }}</span>{% endif %}
+    </div>
+    <div style="display:flex;gap:8px">
+        <a href="{{ url_for('inbound', site_id=site.id) }}" class="btn btn-green">📥 入库</a>
+        <a href="{{ url_for('outbound', site_id=site.id) }}" class="btn btn-primary">📤 出库</a>
+        <a href="{{ url_for('site_records', site_id=site.id) }}" class="btn btn-outline">📋 记录</a>
+    </div>
+</div>
+
+<div class="card">
+    <h2>库存清单</h2>
+    {% if inventory %}
+    <table>
+        <tr>
+            <th>编码</th><th>名称</th><th>规格</th><th>单位</th><th>数量</th>
+        </tr>
+        {% for i in inventory %}
+        <tr>
+            <td><span class="tag">{{ i.code }}</span></td>
+            <td><strong>{{ i.name }}</strong></td>
+            <td>{{ i.spec or '-' }}</td>
+            <td>{{ i.unit }}</td>
+            <td style="font-weight:700;color:{% if i.quantity < 10 %}#e74c3c{% else %}#1a7d1a{% endif %}">
+                {{ i.quantity }}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="empty">
+        <p style="font-size:36px;margin-bottom:12px">📦</p>
+        <p>暂无库存物资</p>
+        <p style="margin-top:8px"><a href="{{ url_for('inbound', site_id=site.id) }}" class="btn btn-green">去入库</a></p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
