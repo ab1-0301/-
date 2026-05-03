@@ -1,50 +1,45 @@
 {% extends "base.html" %}
-{% block title %}智能仓储管理系统{% endblock %}
+{% block title %}项目地总览{% endblock %}
 {% block content %}
-<div class="stats">
-    <div class="stat-card">
-        <div class="num">{{ materials|length }}</div>
-        <div class="label">物资种类</div>
-    </div>
-    <div class="stat-card">
-        <div class="num">{{ materials|sum(attribute='quantity') }}</div>
-        <div class="label">库存总数</div>
-    </div>
-    <div class="stat-card">
-        <div class="num">{{ materials|selectattr('quantity', 'lt', 10)|list|length }}</div>
-        <div class="label">低库存（<10）</div>
-    </div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div class="page-title">📍 项目地总览</div>
+    <a href="{{ url_for('site_add') }}" class="btn btn-primary">+ 新建项目地</a>
 </div>
 
-<div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h2>库存清单</h2>
-        <a href="{{ url_for('inbound') }}" class="btn btn-primary">+ 入库</a>
+{% if sites %}
+<div class="grid-3">
+    {% for s in sites %}
+    <div class="site-card">
+        <h3>
+            <a href="{{ url_for('site_detail', id=s.id) }}" style="color:#1a1a4e;text-decoration:none">
+                {{ s.name }}
+            </a>
+        </h3>
+        <div class="meta">
+            {% if s.location %}{{ s.location }} · {% endif %}
+            {{ s.created }}
+        </div>
+        {% if s.contact %}<div class="meta">联系人：{{ s.contact }}</div>{% endif %}
+        <div class="stats">
+            <span>物资种类 <strong>{{ s.total_types }}</strong></span>
+            <span>库存总数 <strong>{{ s.total_items }}</strong></span>
+        </div>
+        <div class="actions">
+            <a href="{{ url_for('site_detail', id=s.id) }}" class="btn btn-primary btn-sm">进入</a>
+            <a href="{{ url_for('site_edit', id=s.id) }}" class="btn btn-outline btn-sm">编辑</a>
+            <a href="{{ url_for('site_delete', id=s.id) }}" class="btn btn-red btn-sm"
+               onclick="return confirm('确认删除项目地「{{ s.name }}」？所有库存数据将一并删除。')">删除</a>
+        </div>
     </div>
-    {% if materials %}
-    <table>
-        <tr>
-            <th>编码</th><th>名称</th><th>规格</th><th>单位</th><th>数量</th><th>库位</th><th>操作</th>
-        </tr>
-        {% for m in materials %}
-        <tr>
-            <td>{{ m.code }}</td>
-            <td><strong>{{ m.name }}</strong></td>
-            <td>{{ m.spec or '-' }}</td>
-            <td>{{ m.unit }}</td>
-            <td style="color:{% if m.quantity < 10 %}#e74c3c{% else %}#1a7d1a{% endif %};font-weight:700">
-                {{ m.quantity }}
-            </td>
-            <td>{{ m.location or '-' }}</td>
-            <td>
-                <a href="{{ url_for('delete_material', material_id=m.id) }}" class="btn btn-danger" style="padding:4px 12px;font-size:12px"
-                   onclick="return confirm('确认删除 {{ m.name }}？')">删除</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% else %}
-    <div class="empty">暂无物资，点击右上角「入库」添加</div>
-    {% endif %}
+    {% endfor %}
 </div>
+{% else %}
+<div class="card">
+    <div class="empty">
+        <p style="font-size:40px;margin-bottom:12px">🏗️</p>
+        <p>还没有项目地</p>
+        <p style="margin-top:8px"><a href="{{ url_for('site_add') }}" class="btn btn-primary">新建第一个项目地</a></p>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

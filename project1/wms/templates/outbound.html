@@ -1,16 +1,18 @@
 {% extends "base.html" %}
-{% block title %}物资出库{% endblock %}
+{% block title %}出库 - {{ site.name }}{% endblock %}
 {% block content %}
+<a href="{{ url_for('site_detail', id=site.id) }}" class="back-link">← 返回 {{ site.name }}</a>
+
 <div class="card" style="max-width:500px">
-    <h2>📤 物资出库</h2>
+    <h2>📤 出库 — {{ site.name }}</h2>
     <form method="POST">
         <div class="form-group">
-            <label>选择物资</label>
-            <select name="code" required>
+            <label>物资 *</label>
+            <select name="material_id" required>
                 <option value="">-- 请选择 --</option>
-                {% for m in materials %}
-                <option value="{{ m.code }}" data-qty="{{ m.quantity }}">
-                    {{ m.code }} — {{ m.name }}（库存：{{ m.quantity }}{{ m.unit }}）
+                {% for i in inventory %}
+                <option value="{{ i.material_id }}">
+                    {{ i.code }} — {{ i.name }}（规格：{{ i.spec or '-' }} | 库存：{{ i.quantity }}{{ i.unit }}）
                 </option>
                 {% endfor %}
             </select>
@@ -23,10 +25,14 @@
             <label>操作人</label>
             <input type="text" name="operator" placeholder="张照航">
         </div>
+        <div class="form-group">
+            <label>备注</label>
+            <input type="text" name="note" placeholder="如 领用至A工区">
+        </div>
         <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">确认出库</button>
     </form>
+    {% if not inventory %}
+    <div class="flash error" style="margin-top:16px">该项目地暂无库存物资，请先入库。</div>
+    {% endif %}
 </div>
-{% if not materials %}
-<div class="flash error" style="margin-top:16px">暂无库存物资，请先入库</div>
-{% endif %}
 {% endblock %}

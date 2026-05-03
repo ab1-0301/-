@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}物资目录{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div class="page-title">📦 物资目录</div>
+</div>
+
+<div class="card" style="max-width:500px;margin-bottom:20px">
+    <h2>+ 添加新物资</h2>
+    <form method="POST" action="{{ url_for('material_add') }}">
+        <div class="grid-2">
+            <div class="form-group">
+                <label>编码 *</label>
+                <input type="text" name="code" required placeholder="如 MAT-001">
+            </div>
+            <div class="form-group">
+                <label>名称 *</label>
+                <input type="text" name="name" required placeholder="如 电阻器">
+            </div>
+        </div>
+        <div class="grid-2">
+            <div class="form-group">
+                <label>规格</label>
+                <input type="text" name="spec" placeholder="如 100Ω">
+            </div>
+            <div class="form-group">
+                <label>单位</label>
+                <input type="text" name="unit" value="个" placeholder="个/箱/kg">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:4px">添加</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>全部物资（{{ materials|length }} 种）</h2>
+    {% if materials %}
+    <table>
+        <tr>
+            <th>编码</th><th>名称</th><th>规格</th><th>单位</th><th>操作</th>
+        </tr>
+        {% for m in materials %}
+        <tr>
+            <td><span class="tag">{{ m.code }}</span></td>
+            <td><strong>{{ m.name }}</strong></td>
+            <td>{{ m.spec or '-' }}</td>
+            <td>{{ m.unit }}</td>
+            <td>
+                <a href="{{ url_for('material_delete', id=m.id) }}" class="btn btn-red btn-sm"
+                   onclick="return confirm('确认删除物资「{{ m.name }}」？')">删除</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="empty">暂无物资，请先添加</div>
+    {% endif %}
+</div>
+{% endblock %}

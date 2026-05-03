@@ -1,42 +1,38 @@
 {% extends "base.html" %}
-{% block title %}物资入库{% endblock %}
+{% block title %}入库 - {{ site.name }}{% endblock %}
 {% block content %}
+<a href="{{ url_for('site_detail', id=site.id) }}" class="back-link">← 返回 {{ site.name }}</a>
+
 <div class="card" style="max-width:500px">
-    <h2>📥 物资入库</h2>
+    <h2>📥 入库 — {{ site.name }}</h2>
     <form method="POST">
         <div class="form-group">
-            <label>物资编码 *</label>
-            <input type="text" name="code" required placeholder="如 MAT-001">
+            <label>物资 *</label>
+            <select name="material_id" required>
+                <option value="">-- 请选择 --</option>
+                {% for m in materials %}
+                <option value="{{ m.id }}">{{ m.code }} — {{ m.name }}（{{ m.spec or '-' }}，{{ m.unit }}）</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="form-group">
-            <label>物资名称 *</label>
-            <input type="text" name="name" required placeholder="如 电阻器">
-        </div>
-        <div class="grid-2">
-            <div class="form-group">
-                <label>规格</label>
-                <input type="text" name="spec" placeholder="如 100Ω">
-            </div>
-            <div class="form-group">
-                <label>单位</label>
-                <input type="text" name="unit" value="个" placeholder="个/箱/kg">
-            </div>
-        </div>
-        <div class="grid-2">
-            <div class="form-group">
-                <label>数量 *</label>
-                <input type="number" name="quantity" required min="1" value="1">
-            </div>
-            <div class="form-group">
-                <label>库位</label>
-                <input type="text" name="location" placeholder="如 A-01-03">
-            </div>
+            <label>入库数量 *</label>
+            <input type="number" name="quantity" required min="1" value="1">
         </div>
         <div class="form-group">
             <label>操作人</label>
             <input type="text" name="operator" placeholder="张照航">
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">确认入库</button>
+        <div class="form-group">
+            <label>备注</label>
+            <input type="text" name="note" placeholder="如 供应商A送货">
+        </div>
+        <button type="submit" class="btn btn-green" style="width:100%;margin-top:8px">确认入库</button>
     </form>
+    {% if not materials %}
+    <div class="flash error" style="margin-top:16px">
+        暂无物资目录，请先在 <a href="{{ url_for('material_list') }}">物资目录</a> 中添加物资。
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
