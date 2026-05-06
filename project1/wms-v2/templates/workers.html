@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}工人管理 - {{ site.name }}{% endblock %}
+{% block content %}
+<a href="{{ url_for('site_detail', id=site.id) }}" class="back-link">← 返回 {{ site.name }}</a>
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div class="page-title" style="margin-bottom:0">👷 工人打卡 — {{ site.name }}</div>
+    <a href="{{ url_for('worker_add', site_id=site.id) }}" class="btn btn-primary">+ 添加工人</a>
+</div>
+
+<!-- 今日出勤 + 批量操作 -->
+<form method="POST" action="{{ url_for('attendance_batch', site_id=site.id) }}">
+<div class="card" style="margin-bottom:20px;border-left:4px solid #1a1a4e">
+    <h2 style="font-size:18px">📊 今日出勤（{{ today }}）</h2>
+    {% if workers_attendance %}
+    <table>
+        <tr>
+            <th><input type="checkbox" id="select-all" onclick="toggleAll(this)"></th>
+            <th>姓名</th><th>签到时间</th><th>状态</th><th>备注</th>
+        </tr>
+        {% for wa in workers_attendance %}
+        {% set r = wa.record %}
+        <tr>
+            <td><input type="checkbox" name="worker_ids" value="{{ wa.worker.id }}"></td>
+            <td>
+                <strong><a href="{{ url_for('worker_monthly', id=wa.worker.id) }}" style="color:#1a1a4e;font-size:15px">{{ wa.worker.name }}</a></strong>
+                {% if wa.worker.phone %}<span style="color:#999;font-size:12px;margin-left:6px">{{ wa.worker.phone }}</span>{% endif %}
+            </td>
+            <td>{{ r.check_in if r and r.check_in else '-' }}</td>
+            <td>
+                {% if r and r.status == '旷工' %}
+                <span class="badge" style="background:#ffe6e6;color:#cc0000;font-weight:600">❌ 旷工</span>
+                {% elif r and r.check_in %}
+                <span class="badge badge-in" style="font-size:13px">✅ 已签到</span>
+                {% else %}
+                <span class="badge" style="background:#f5f5f5;color:#999">⏳ 未签到</span>
+                {% endif %}
+            </td>
+            <td style="color:#999;font-size:13px">{{ r.note if r and r.note else '-' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap">
+        <span style="font-size:13px;color:#666;font-weight:600">批量操作：</span>
+        <button type="submit" name="action" value="checkin" class="btn btn-green">✅ 签到</button>
+        <button type="submit" name="action" value="absent" class="btn btn-red">❌ 标记旷工</button>
+        <input type="text" name="note" placeholder="备注（可选）" style="padding:6px 10px;border:1px solid #ddd;border-radius:4px;font-size:13px;flex:1;min-width:160px">
+    </div>
+    {% else %}
+    <div class="empty">
+        <p>暂无工人，请先添加工人。</p>
+    </div>
+    {% endif %}
+</div>
+</form>
+
+<script>
+function toggleAll(src) {
+    var cbs = document.querySelectorAll('input[name="worker_ids"]');
+    for (var i = 0; i < cbs.length; i++) cbs[i].checked = src.checked;
+}
+</script>
+
+<!-- 单人签到 -->
+<div class="card" style="margin-bottom:20px">
+    <h2 style="font-size:16px">📌 单人签到</h2>
+    {% if workers %}
+    <form method="POST" action="{{ url_for('attendance_checkin', site_id=site.id) }}" style="display:flex;gap:8px;align-items:end">
+        <div class="form-group" style="margin-bottom:0;flex:1">
+            <select name="worker_id" required>
+                <option value="">-- 选择工人 --</option>
+                {% for w in workers %}
+                <option value="{{ w.id }}">{{ w.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-green">✅ 签到</button>
+    </form>
+    {% endif %}
+</div>
+
+<!-- 打卡历史 -->
+<div class="card">
+    <h2 style="font-size:16px">📜 打卡历史（最近50条）</h2>
+    {% if history %}
+    <table>
+        <tr>
+            <th>日期</th><th>姓名</th><th>签到</th><th>状态</th><th>备注</th>
+        </tr>
+        {% for r in history %}
+        <tr>
+            <td style="color:#999;font-size:13px">{{ r.date }}</td>
+            <td><strong><a href="{{ url_for('worker_monthly', id=r.worker_id) }}" style="color:#1a1a4e">{{ r.worker_name }}</a></strong></td>
+            <td>{{ r.check_in or '-' }}</td>
+            <td>
+                {% if r.status == '旷工' %}
+                <span class="badge" style="background:#ffe6e6;color:#cc0000">旷工</span>
+                {% elif r.check_in %}
+                <span class="badge badge-in">已签到</span>
+                {% else %}
+                <span class="badge" style="background:#f0f0f0;color:#999">-</span>
+                {% endif %}
+            </td>
+            <td style="color:#999;font-size:13px">{{ r.note or '-' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="empty">暂无打卡记录</div>
+    {% endif %}
+</div>
+
+<!-- 工人列表 -->
+<div class="card" style="margin-top:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h2 style="font-size:16px;margin:0">👥 全部工人（{{ workers|length }}人）</h2>
+        <a href="{{ url_for('worker_add', site_id=site.id) }}" class="btn btn-primary btn-sm">+ 添加</a>
+    </div>
+    {% if workers %}
+    <table>
+        <tr>
+            <th>姓名</th><th>电话</th><th>证件号</th><th>添加日期</th><th>操作</th>
+        </tr>
+        {% for w in workers %}
+        <tr>
+            <td><strong><a href="{{ url_for('worker_monthly', id=w.id) }}" style="color:#1a1a4e;font-size:15px">{{ w.name }}</a></strong></td>
+            <td>{{ w.phone or '-' }}</td>
+            <td>{{ w.id_card or '-' }}</td>
+            <td style="color:#999;font-size:13px">{{ w.created }}</td>
+            <td>
+                <a href="{{ url_for('worker_monthly', id=w.id) }}" class="btn btn-outline btn-sm">📅 考勤</a>
+                <a href="{{ url_for('worker_edit', site_id=site.id, worker_id=w.id) }}" class="btn btn-outline btn-sm">编辑</a>
+                <a href="{{ url_for('worker_delete', site_id=site.id, worker_id=w.id) }}" class="btn btn-red btn-sm"
+                   onclick="return confirm('确认删除工人「{{ w.name }}」？')">删除</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="empty">暂无工人</div>
+    {% endif %}
+</div>
+{% endblock %}

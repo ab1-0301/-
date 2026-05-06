@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}全部工人{% endblock %}
+{% block content %}
+<div class="page-title">👥 全部工人</div>
+
+<div class="card" style="margin-bottom:20px;border-left:4px solid #1a1a4e">
+    <h2 style="font-size:18px;margin-bottom:12px">📊 今日工人情况 · {{ today }}</h2>
+    <div style="display:flex;justify-content:space-around;text-align:center;padding:12px 0;background:#f8f9fb;border-radius:8px">
+        <div>
+            <span style="font-size:28px;font-weight:700;color:#1a1a4e;display:block">{{ summary.total }}</span>
+            <span style="font-size:13px;color:#666">总人数</span>
+        </div>
+        <div>
+            <span style="font-size:28px;font-weight:700;color:#1a7d1a;display:block">{{ summary.present }}</span>
+            <span style="font-size:13px;color:#666">已签到</span>
+        </div>
+        <div>
+            <span style="font-size:28px;font-weight:700;color:#cc0000;display:block">{{ summary.absent }}</span>
+            <span style="font-size:13px;color:#666">旷工</span>
+        </div>
+        <div>
+            <span style="font-size:28px;font-weight:700;color:#999;display:block">{{ summary.none }}</span>
+            <span style="font-size:13px;color:#666">未签到</span>
+        </div>
+    </div>
+</div>
+
+{% if groups %}
+    {% for g in groups %}
+    <div class="card" style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h3 style="font-size:16px;color:#1a1a4e">{{ g.site_name }}</h3>
+            <span style="font-size:13px;color:#999">{{ g.workers|length }}人</span>
+        </div>
+        <table>
+            <tr>
+                <th>姓名</th><th>电话</th><th>今日状态</th><th>操作</th>
+            </tr>
+            {% for w in g.workers %}
+            <tr>
+                <td><strong style="font-size:15px">{{ w.name }}</strong></td>
+                <td>{{ w.phone or '-' }}</td>
+                <td>
+                    {% if w.att_status == '旷工' %}
+                        <span class="badge badge-out" style="font-size:13px;font-weight:600">❌ 旷工</span>
+                    {% elif w.check_in %}
+                        <span class="badge badge-in" style="font-size:13px">✅ 已签到</span>
+                    {% else %}
+                        <span class="badge" style="background:#f5f5f5;color:#999;font-size:13px">⏳ 未签到</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('worker_monthly', id=w.id) }}" class="btn btn-outline btn-sm">📅 考勤</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endfor %}
+{% else %}
+<div class="card">
+    <div class="empty">暂无工人</div>
+</div>
+{% endif %}
+{% endblock %}

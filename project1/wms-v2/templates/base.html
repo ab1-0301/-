@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}智能仓储管理系统{% endblock %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, 'Microsoft YaHei', sans-serif; background: #f0f2f5; color: #333; }
+        nav { background: #1a1a4e; padding: 14px 32px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+        nav .logo { color: #fff; font-weight: 700; font-size: 18px; letter-spacing: 1px; }
+        nav a { color: rgba(255,255,255,.75); text-decoration: none; font-size: 14px; }
+        nav a:hover { color: #fff; }
+        nav .right { margin-left: auto; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+        .flash { padding: 12px 20px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; }
+        .flash.success { background: #e6f7e6; color: #1a7d1a; border: 1px solid #b8e6b8; }
+        .flash.error { background: #ffe6e6; color: #cc0000; border: 1px solid #ffb8b8; }
+        table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,.08); }
+        th, td { padding: 12px 16px; text-align: left; font-size: 14px; }
+        th { background: #f7f8fa; color: #666; font-weight: 600; }
+        tr:not(:last-child) td { border-bottom: 1px solid #f0f0f0; }
+        .btn { display: inline-block; padding: 8px 20px; border-radius: 6px; font-size: 14px; text-decoration: none; cursor: pointer; border: none; }
+        .btn-primary { background: #1a1a4e; color: #fff; }
+        .btn-primary:hover { background: #2a2a6e; }
+        .btn-sm { padding: 4px 12px; font-size: 12px; }
+        .btn-green { background: #27ae60; color: #fff; }
+        .btn-green:hover { background: #219a52; }
+        .btn-red { background: #e74c3c; color: #fff; }
+        .btn-red:hover { background: #c0392b; }
+        .btn-outline { background: transparent; color: #666; border: 1px solid #ddd; }
+        .btn-outline:hover { background: #f5f5f5; }
+        .card { background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 1px 6px rgba(0,0,0,.08); }
+        .card h2 { font-size: 18px; margin-bottom: 16px; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 13px; color: #666; margin-bottom: 4px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+        .form-group input:focus, .form-group select:focus { border-color: #1a1a4e; outline: none; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+        .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; }
+        .badge-in { background: #e6f7e6; color: #1a7d1a; }
+        .badge-out { background: #ffe6e6; color: #cc0000; }
+        .site-card { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 1px 6px rgba(0,0,0,.08); }
+        .site-card h3 { font-size: 16px; margin-bottom: 8px; }
+        .site-card .meta { color: #999; font-size: 13px; }
+        .site-card .stats { display: flex; gap: 16px; margin: 12px 0; }
+        .site-card .stats span { font-size: 13px; color: #666; }
+        .site-card .stats strong { color: #1a1a4e; }
+        .site-card .actions { display: flex; gap: 8px; }
+        .empty { text-align: center; padding: 40px; color: #999; font-size: 14px; }
+        .page-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+        .back-link { display: inline-block; margin-bottom: 16px; color: #1a1a4e; text-decoration: none; font-size: 14px; }
+        .back-link:hover { text-decoration: underline; }
+        .search-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+        .search-bar input { flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+        .tag { display: inline-block; background: #eef; color: #1a1a4e; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <span class="logo">📦 WMS</span>
+        <a href="{{ url_for('index') }}">项目地总览</a>
+        <a href="{{ url_for('material_list') }}">物资目录</a>
+        <a href="{{ url_for('workers_global') }}">全部工人</a>
+        <a href="{{ url_for('all_records') }}">全局记录</a>
+        <a href="{{ url_for('all_expenses') }}">全局开支</a>
+        <span class="right"><a href="{{ url_for('site_add') }}">+ 新建项目地</a></span>
+    </nav>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="flash {{ category }}">{{ msg }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}{{ site.name }} - 详情{% endblock %}
+{% block content %}
+<a href="{{ url_for('index') }}" class="back-link">← 返回项目地总览</a>
+
+<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:20px">
+    <div>
+        <div class="page-title">📍 {{ site.name }}</div>
+        <div style="font-size:14px;color:#999;margin-top:4px">📅 {{ today }}</div>
+        {% if site.location %}<span class="tag">{{ site.location }}</span>{% endif %}
+        {% if site.contact %}<span class="tag">📞 {{ site.contact }}</span>{% endif %}
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a href="{{ url_for('inbound', site_id=site.id) }}" class="btn btn-green">📥 入库</a>
+        <a href="{{ url_for('outbound', site_id=site.id) }}" class="btn btn-primary">📤 出库</a>
+        <a href="{{ url_for('site_records', site_id=site.id) }}" class="btn btn-outline">📋 记录</a>
+        <a href="{{ url_for('worker_list', site_id=site.id) }}" class="btn btn-outline">👷 工人打卡 ({{ worker_count }})</a>
+        <a href="{{ url_for('expenses', site_id=site.id) }}" class="btn btn-outline">💳 开支</a>
+    </div>
+</div>
+
+<div style="display:flex;gap:20px;align-items:start">
+  <!-- 左侧：今日概况（主要区域） -->
+  <div style="flex:2;min-width:0">
+    <!-- 今日开支 -->
+    <div class="card" style="border-left:4px solid #e74c3c;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <h2 style="margin:0">💳 今日开支</h2>
+            <span style="font-size:22px;font-weight:700;color:#e74c3c">¥{{ "%.2f"|format(today_expenses_total) }}</span>
+        </div>
+        {% if today_expenses %}
+        <table>
+            <tr><th>类别</th><th>金额</th></tr>
+            {% for e in today_expenses %}
+            <tr>
+                <td><span class="tag">{{ e.category }}</span></td>
+                <td style="font-weight:700;color:#e74c3c">¥{{ "%.2f"|format(e.amount) }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <div class="empty" style="padding:12px">今日暂无开支</div>
+        {% endif %}
+    </div>
+
+    <!-- 今日工人出勤 -->
+    <div class="card" style="border-left:4px solid #1a1a4e;margin-bottom:16px">
+        <h2 style="margin-bottom:10px">👷 今日出勤 ({{ workers_today|length }}人)</h2>
+        {% if workers_today %}
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+            {% for w in workers_today %}
+            <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:13px;
+                {% if w.att_status == '旷工' %}background:#ffe6e6;color:#cc0000;font-weight:600
+                {% elif w.check_in %}background:#e6f7e6;color:#1a7d1a
+                {% else %}background:#f5f5f5;color:#999{% endif %}">
+                {{ w.name }}
+                {% if w.att_status == '旷工' %}❌{% elif w.check_in %}✅{% else %}⏳{% endif %}
+            </span>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty" style="padding:12px">暂无工人</div>
+        {% endif %}
+    </div>
+
+    <!-- 今日出库 -->
+    <div class="card" style="border-left:4px solid #1a7d1a;margin-bottom:16px">
+        <h2 style="margin-bottom:10px">📤 今日出库</h2>
+        {% if outbound_today %}
+        <table>
+            <tr><th>名称</th><th>数量</th></tr>
+            {% for t in outbound_today %}
+            <tr>
+                <td><strong>{{ t.name }}</strong></td>
+                <td style="font-weight:700;color:#e74c3c">{{ t.quantity }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <div class="empty" style="padding:12px">今日暂无出库</div>
+        {% endif %}
+    </div>
+  </div>
+
+  <!-- 右侧：库存清单 -->
+  <div style="flex:1;min-width:0">
+    <div class="card">
+        <h2>📦 库存清单</h2>
+        {% if inventory %}
+        <table>
+            <tr><th>编码</th><th>名称</th><th>规格</th><th>单位</th><th>数量</th></tr>
+            {% for i in inventory %}
+            <tr>
+                <td><span class="tag">{{ i.code }}</span></td>
+                <td><strong>{{ i.name }}</strong></td>
+                <td>{{ i.spec or '-' }}</td>
+                <td>{{ i.unit }}</td>
+                <td style="font-weight:700;color:{% if i.quantity < 10 %}#e74c3c{% else %}#1a7d1a{% endif %}">{{ i.quantity }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <div class="empty"><p style="font-size:36px;margin-bottom:12px">📦</p><p>暂无库存物资</p></div>
+        {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

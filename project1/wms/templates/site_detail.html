@@ -13,6 +13,8 @@
         <a href="{{ url_for('inbound', site_id=site.id) }}" class="btn btn-green">📥 入库</a>
         <a href="{{ url_for('outbound', site_id=site.id) }}" class="btn btn-primary">📤 出库</a>
         <a href="{{ url_for('site_records', site_id=site.id) }}" class="btn btn-outline">📋 记录</a>
+        <a href="{{ url_for('worker_list', site_id=site.id) }}" class="btn btn-outline">👷 工人 ({{ worker_count }})</a>
+        <a href="{{ url_for('attendance', site_id=site.id) }}" class="btn btn-outline">🕐 打卡</a>
     </div>
 </div>
 

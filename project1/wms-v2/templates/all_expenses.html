@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}全局开支{% endblock %}
+{% block content %}
+<div class="page-title">💳 全局开支</div>
+
+{% if expenses_by_site %}
+    {% for site_name, data in expenses_by_site.items() %}
+    <div class="card" style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h3 style="font-size:16px;color:#1a1a4e">{{ site_name }}</h3>
+            <span style="font-size:18px;font-weight:700;color:#e74c3c">总计 ¥{{ '%.2f'|format(data.total) }}</span>
+        </div>
+        <table>
+            <tr>
+                <th>日期</th><th>类别</th><th>金额</th><th>说明</th><th>经手人</th>
+            </tr>
+            {% for e in data.expenses %}
+            <tr>
+                <td style="color:#666;font-size:13px">{{ e.created }}</td>
+                <td><span class="tag">{{ e.category }}</span></td>
+                <td style="font-weight:700;color:#e74c3c">¥{{ '%.2f'|format(e.amount) }}</td>
+                <td>{{ e.description or '-' }}</td>
+                <td>{{ e.operator or '-' }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endfor %}
+{% else %}
+<div class="card">
+    <div class="empty">暂无开支记录</div>
+</div>
+{% endif %}
+{% endblock %}

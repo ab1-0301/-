@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ '编辑' if worker else '添加' }}工人 - {{ site.name }}{% endblock %}
+{% block content %}
+<a href="{{ url_for('worker_list', site_id=site.id) }}" class="back-link">← 返回工人列表</a>
+
+<div class="card" style="max-width:500px">
+    <h2>{{ '✏️ 编辑工人' if worker else '➕ 添加工人' }} — {{ site.name }}</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label>姓名 *</label>
+            <input type="text" name="name" required value="{{ worker.name if worker else '' }}" placeholder="如 张三">
+        </div>
+        <div class="form-group">
+            <label>电话</label>
+            <input type="text" name="phone" value="{{ worker.phone if worker else '' }}" placeholder="如 13800138000">
+        </div>
+        <div class="form-group">
+            <label>证件号</label>
+            <input type="text" name="id_card" value="{{ worker.id_card if worker else '' }}" placeholder="如 身份证号">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px">
+            {{ '更新' if worker else '添加' }}
+        </button>
+    </form>
+</div>
+{% endblock %}

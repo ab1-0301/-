@@ -35,6 +35,8 @@
 │   ├── 张照航_C5A_仓库分析.md
 │   └── 张照航_C5A_screenshots/   # GitHub 操作截图
 │
+├── wms-agents/                   # C5-AG2 挑战 —— WMS 多智能体系统
+│
 ├── week01-02/                    # 第1-2周课程成果
 │   ├── prompts/                  # D4 — 提示词练习
 │   │   ├── D4-P1.md
@@ -65,6 +67,7 @@
 |------|------|----------|
 | **Skills** | Claude Code AI 编程辅助技能包 | 调试、TDD、计划、审查、编码准则 |
 | **C5A** | GitHub 实操：fork、clone、commit、branch | Git 版本控制、协作工作流 |
+| **C5-AG2** | WMS 多智能体系统（AG2 Beta） | Agent-as-tool、Task Delegation |
 | **D4** | 提示工程基础：三种提示场景练习 | 角色设定、输出格式控制、迭代指令 |
 | **D5** | PDF 技能调用：提取文本 + 总结要点 | 技能（Skill）的理解与使用 |
 | **D9** | K-S-T-A-R 完整循环 + 三项技能扩展 | KSTAR 工作流、Anki/Python/海报 |

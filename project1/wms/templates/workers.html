@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}工人管理 - {{ site.name }}{% endblock %}
+{% block content %}
+<a href="{{ url_for('site_detail', id=site.id) }}" class="back-link">← 返回 {{ site.name }}</a>
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div class="page-title">👷 工人管理 — {{ site.name }}</div>
+    <a href="{{ url_for('worker_add', site_id=site.id) }}" class="btn btn-primary">+ 添加工人</a>
+</div>
+
+<div class="card">
+    {% if workers %}
+    <table>
+        <tr>
+            <th>姓名</th><th>电话</th><th>证件号</th><th>添加日期</th><th>操作</th>
+        </tr>
+        {% for w in workers %}
+        <tr>
+            <td><strong>{{ w.name }}</strong></td>
+            <td>{{ w.phone or '-' }}</td>
+            <td>{{ w.id_card or '-' }}</td>
+            <td style="color:#999;font-size:13px">{{ w.created }}</td>
+            <td>
+                <a href="{{ url_for('worker_edit', site_id=site.id, worker_id=w.id) }}" class="btn btn-outline btn-sm">编辑</a>
+                <a href="{{ url_for('worker_delete', site_id=site.id, worker_id=w.id) }}" class="btn btn-red btn-sm"
+                   onclick="return confirm('确认删除工人「{{ w.name }}」？')">删除</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="empty">
+        <p>暂无工人信息</p>
+        <p style="margin-top:8px"><a href="{{ url_for('worker_add', site_id=site.id) }}" class="btn btn-primary">添加第一位工人</a></p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}{{ worker.name }} - 月度考勤{% endblock %}
+{% block content %}
+<a href="{{ url_for('worker_list', site_id=worker.site_id) }}" class="back-link">← 返回工人列表</a>
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <a href="?id={{ worker.id }}&year={{ year-1 if month == 1 else year }}&month={{ month-1 if month > 1 else 12 }}"
+       class="btn btn-outline btn-sm">◀ 上月</a>
+    <span style="font-size:18px;font-weight:700;color:#1a1a4e">{{ year }}年{{ month }}月</span>
+    <a href="?id={{ worker.id }}&year={{ year if month < 12 else year+1 }}&month={{ month+1 if month < 12 else 1 }}"
+       class="btn btn-outline btn-sm">下月 ▶</a>
+</div>
+
+<div class="card" style="margin-bottom:20px;border-left:4px solid #1a1a4e">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+            <div class="page-title" style="margin-bottom:4px">👤 {{ worker.name }} <span style="font-size:14px;color:#999;font-weight:400">· {{ worker.site_name }}</span></div>
+            <div style="color:#999;font-size:14px">
+                {% if worker.phone %}电话：{{ worker.phone }} · {% endif %}
+                {{ year }}年{{ month }}月考勤
+            </div>
+        </div>
+        <div style="text-align:center;background:#f7f8fa;padding:12px 24px;border-radius:10px">
+            {% set total = records|length %}
+            {% set checked = records|selectattr('check_in')|list|length %}
+            {% set absent = records|selectattr('status', 'equalto', '旷工')|list|length %}
+            <div style="font-size:13px;color:#666">本月天数</div>
+            <div style="font-size:28px;font-weight:700;color:#1a1a4e">{{ total }}</div>
+            <div style="display:flex;gap:12px;margin-top:4px;font-size:13px">
+                <span>✅ <strong style="color:#27ae60">{{ checked }}</strong></span>
+                <span>❌ <strong style="color:#e74c3c">{{ absent }}</strong></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2 style="font-size:18px">📅 {{ year }}年{{ month }}月 打卡明细</h2>
+    {% if records %}
+    <table>
+        <tr>
+            <th>日期</th><th>星期</th><th>签到</th><th>状态</th><th>备注</th>
+        </tr>
+        {% set weekdays = ['周一','周二','周三','周四','周五','周六','周日'] %}
+        {% for r in records %}
+        {% set day = r.date.split('-')[2]|int %}
+        {% set wday = (r.date + ' 00:00:00'|strftime) if False else '' %}
+        <tr style="{% if r.status == '旷工' %}background:#fff5f5{% endif %}">
+            <td style="font-size:15px;font-weight:600">{{ day }}日</td>
+            <td style="color:#999;font-size:13px">{{ weekdays[(loop.index0 + 1) % 7] }}</td>
+            <td>{{ r.check_in if r.check_in else '-' }}</td>
+            <td>
+                {% if r.status == '旷工' %}
+                <span class="badge" style="background:#ffe6e6;color:#cc0000;font-size:13px">旷工</span>
+                {% elif r.check_in and r.check_out %}
+                <span class="badge badge-in" style="font-size:13px">已签退</span>
+                {% elif r.check_in %}
+                <span class="badge badge-out" style="font-size:13px">在岗</span>
+                {% endif %}
+            </td>
+            <td style="color:#999;font-size:13px">{{ r.note or '-' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="empty" style="padding:30px">
+        <p style="font-size:20px;margin-bottom:8px">📭</p>
+        <p style="font-size:16px">本月暂无打卡记录</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
