@@ -1,0 +1,28 @@
+{
+  "categories": {
+    "A": {"description": "高价值/快周转", "items": {
+      "A001": {"name": "笔记本电脑", "quantity": 45, "location": "A-01-01", "unit": "台"},
+      "A002": {"name": "显示器 27寸",  "quantity": 30, "location": "A-01-02", "unit": "台"},
+      "A003": {"name": "机械键盘",    "quantity": 120, "location": "A-02-01", "unit": "个"},
+      "A004": {"name": "无线鼠标",    "quantity": 200, "location": "A-02-02", "unit": "个"}
+    }},
+    "B": {"description": "中价值/常规周转", "items": {
+      "B001": {"name": "USB-C 数据线",  "quantity": 500, "location": "B-01-01", "unit": "根"},
+      "B002": {"name": "电源适配器",   "quantity": 150, "location": "B-01-02", "unit": "个"},
+      "B003": {"name": "外置硬盘 2TB",  "quantity": 60,  "location": "B-02-01", "unit": "块"},
+      "B004": {"name": "网络交换机",    "quantity": 25,  "location": "B-02-02", "unit": "台"}
+    }},
+    "C": {"description": "低价值/散货", "items": {
+      "C001": {"name": "螺丝刀套装",  "quantity": 300, "location": "C-01-01", "unit": "套"},
+      "C002": {"name": "扎带(100根装)", "quantity": 1000, "location": "C-01-02", "unit": "包"},
+      "C003": {"name": "标签贴纸",    "quantity": 800, "location": "C-02-01", "unit": "张"},
+      "C004": {"name": "防静电手套",  "quantity": 150, "location": "C-02-02", "unit": "双"}
+    }}
+  },
+  "alerts": {
+    "low_stock_threshold": 30,
+    "low_stock_items": ["B004"],
+    "overstock_threshold": 500,
+    "overstock_items": ["C002", "C003"]
+  }
+}
