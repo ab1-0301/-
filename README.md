@@ -11,6 +11,23 @@
 ```
 ├── README.md
 │
+├── skills/                       # Claude Code Skills（AI 编程辅助，共 16 个）
+│   ├── brainstorming/            #   头脑风暴
+│   ├── dispatching-parallel-agents/ # 派发并行代理
+│   ├── executing-plans/          #   执行计划
+│   ├── finishing-a-development-branch/ # 完成开发分支
+│   ├── karpathy-guidelines/      #   Karpathy 编码准则
+│   ├── receiving-code-review/    #   接收代码审查
+│   ├── requesting-code-review/   #   请求代码审查
+│   ├── subagent-driven-development/ # 子代理驱动开发
+│   ├── systematic-debugging/     #   系统化调试
+│   ├── test-driven-development/  #   测试驱动开发
+│   ├── using-git-worktrees/      #   使用 Git Worktree
+│   ├── using-superpowers/        #   Superpowers 使用指南
+│   ├── verification-before-completion/ # 完成前验证
+│   ├── writing-plans/            #   编写实施计划
+│   └── writing-skills/           #   编写技能
+│
 ├── C5A/                          # C5A 挑战 —— GitHub 实操
 │   ├── 张照航_C5A_AAR.md
 │   ├── 张照航_C5A_AI日志.md
@@ -46,6 +63,7 @@
 
 | 阶段 | 内容 | 核心技能 |
 |------|------|----------|
+| **Skills** | Claude Code AI 编程辅助技能包 | 调试、TDD、计划、审查、编码准则 |
 | **C5A** | GitHub 实操：fork、clone、commit、branch | Git 版本控制、协作工作流 |
 | **D4** | 提示工程基础：三种提示场景练习 | 角色设定、输出格式控制、迭代指令 |
 | **D5** | PDF 技能调用：提取文本 + 总结要点 | 技能（Skill）的理解与使用 |
