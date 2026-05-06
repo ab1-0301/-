@@ -23,22 +23,17 @@ load_dotenv()
 
 def get_config():
     """Create model config from environment."""
-    from autogen.beta.config import GeminiConfig, OpenAIConfig
+    from autogen.beta.config import OpenAIConfig
 
     model = os.getenv("AG2_DEFAULT_MODEL", "google/gemini-2.5-flash")
+    api_key = os.getenv("OPENROUTER_API_KEY", "")
+    base_url = os.getenv("OPENAI_BASE_URL", "https://openrouter.ai/api/v1")
 
-    # OpenRouter uses OpenAI-compatible API
-    if "openrouter" in os.getenv("OPENAI_BASE_URL", ""):
-        return OpenAIConfig(
-            model=model,
-            temperature=0.2,
-            api_key=os.getenv("OPENROUTER_API_KEY"),
-        )
-
-    # Try Gemini config (for native Gemini API or OpenRouter Gemini)
-    return GeminiConfig(
-        model=model.replace("google/", ""),
+    return OpenAIConfig(
+        model=model,
         temperature=0.2,
+        api_key=api_key,
+        base_url=base_url,
     )
 
 

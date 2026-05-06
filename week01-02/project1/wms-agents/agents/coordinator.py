@@ -2,12 +2,12 @@
 from __future__ import annotations
 
 from autogen.beta import Agent
-from autogen.beta.config import GeminiConfig
+from autogen.beta.config import OpenAIConfig
 
 from .inventory import query_stock, query_alerts, search_product
 
 
-def create_coordinator(config: GeminiConfig) -> Agent:
+def create_coordinator(config: OpenAIConfig) -> Agent:
     """Create the lead Coordinator agent with inventory tools."""
     # Create Inventory sub-agent
     inventory_agent = Agent(
@@ -39,9 +39,9 @@ def create_coordinator(config: GeminiConfig) -> Agent:
         """Search for a product by keyword in its name."""
         return search_product(keyword)
 
-    inventory_agent.tools.add(get_stock)
-    inventory_agent.tools.add(get_alerts)
-    inventory_agent.tools.add(find_product)
+    inventory_agent.tools.append(get_stock)
+    inventory_agent.tools.append(get_alerts)
+    inventory_agent.tools.append(find_product)
 
     # Expose inventory agent as a tool for coordinator
     consult_inventory = inventory_agent.as_tool(
@@ -65,7 +65,7 @@ def create_coordinator(config: GeminiConfig) -> Agent:
         ),
         config=config,
     )
-    coordinator.tools.add(consult_inventory)
+    coordinator.tools.append(consult_inventory)
 
     return coordinator
 
