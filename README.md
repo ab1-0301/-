@@ -28,13 +28,6 @@
 │   ├── writing-plans/            #   编写实施计划
 │   └── writing-skills/           #   编写技能
 │
-├── C5A/                          # C5A 挑战 —— GitHub 实操
-│   ├── 张照航_C5A_AAR.md
-│   ├── 张照航_C5A_AI日志.md
-│   ├── 张照航_C5A_GitHub账号.txt
-│   ├── 张照航_C5A_仓库分析.md
-│   └── 张照航_C5A_screenshots/   # GitHub 操作截图
-│
 ├── C5/                           # C5-AG2 挑战 —— WMS 多智能体系统
 ├── wms/                          # Flask 版 WMS 网页应用
 │
@@ -67,7 +60,6 @@
 | 阶段 | 内容 | 核心技能 |
 |------|------|----------|
 | **Skills** | Claude Code AI 编程辅助技能包 | 调试、TDD、计划、审查、编码准则 |
-| **C5A** | GitHub 实操：fork、clone、commit、branch | Git 版本控制、协作工作流 |
 | **C5** | WMS 多智能体系统（AG2 Beta） | Agent-as-tool、Task Delegation |
 | **WMS** | Flask 版仓库管理网页应用 | Flask、SQLite、CRUD |
 | **D4** | 提示工程基础：三种提示场景练习 | 角色设定、输出格式控制、迭代指令 |
