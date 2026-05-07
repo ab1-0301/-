@@ -39,15 +39,21 @@ pip install -r requirements.txt
 
 ### 第三步：配置 API Key
 
-复制 `.env.example` 为 `.env`（两种方式选一个）：
+复制 `.env.example` 为 `.env`（三种方式选一个）：
 
-**Windows 用户（PowerShell）：**
+**方式一：鼠标右键重命名（最简单）**
+
+在文件资源管理器里右键 `.env.example` → **重命名**，把 `.example` 删掉只留 `.env`。
+
+> ⚠️ 如果看不到 `.example` 后缀，点文件资源管理器 **"查看" → 勾选"文件扩展名"**。
+
+**方式二：Windows PowerShell**
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-**Mac / Linux 用户：**
+**方式三：Mac / Linux 终端**
 
 ```bash
 cp .env.example .env
