@@ -21,35 +21,46 @@
 
 ## 5-minute setup / 5 分钟跑起来
 
+> 你只需要会打开终端、复制粘贴即可。
+
+### 第一步：进入项目目录
+
 ```bash
-# 1. clone
-git clone <your-repo-url>
-cd wms-agents
+cd C5
+```
 
-# 2. python env
-python -m venv .venv && source .venv/bin/activate    # Python 3.10–3.13
+### 第二步：安装依赖
+
+```bash
 pip install -r requirements.txt
+```
 
-# 3. set keys
+> 如果报错 `pip 不是命令`，说明没装 Python，先装 Python 3.10–3.13。
+
+### 第三步：配置 API Key
+
+```bash
 cp .env.example .env
-# 编辑 .env 填入你的 API Key（支持阿里云百炼 DashScope / OpenRouter）
+```
 
-# 4. run
+然后用记事本打开 `.env`，把里面的 `your-key-here` 替换成你的真实 Key（阿里云百炼或 OpenRouter 都可以）。
+
+### 第四步：运行
+
+```bash
 python main.py
 ```
 
-Expected first-run output:
+看到下面这样就是成功了：
 
 ```
 ==================================================
   WMS 多智能体系统 / WMS Multi-Agent System
-  C5-AG2 Challenge — Track: multi-agent
 ==================================================
-Agent: Coordinator <-> Inventory Specialist
-输入 'quit' 退出 / Type 'quit' to exit
-
 🧑‍💻 You:
 ```
+
+输入一句试试：`查一下所有库存`
 
 ---
 
