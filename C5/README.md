@@ -39,6 +39,16 @@ pip install -r requirements.txt
 
 ### 第三步：配置 API Key
 
+复制 `.env.example` 为 `.env`（两种方式选一个）：
+
+**Windows 用户（PowerShell）：**
+
+```powershell
+Copy-Item .env.example .env
+```
+
+**Mac / Linux 用户：**
+
 ```bash
 cp .env.example .env
 ```
